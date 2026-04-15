@@ -1,61 +1,23 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
-
 rates = {
-    "USD": 1,
-    "KGS": 89,
+    "USD": 1.0,
     "EUR": 0.92,
-    "RUB": 95,
-    "KZT": 450
+    "RUB": 92.0,
+    "KGS": 89.0
 }
 
+while True:
+    amount = input("Сумма (или q для выхода): ")
+    if amount.lower() == "q":
+        break
 
-def convert():
-    try:
-        amount = float(entry_amount.get())
+    amount = float(amount)
+    from_cur = input("Из валюты: ").upper()
+    to_cur = input("В валюту: ").upper()
 
-        if amount <= 0:
-            messagebox.showerror("Ошибка", "Сумма должна быть больше 0!")
-            return
+    if from_cur not in rates or to_cur not in rates:
+        print("Неизвестная валюта")
+        continue
 
-        cur1 = combo_from.get()
-        cur2 = combo_to.get()
-
-        if not cur1 or not cur2:
-            messagebox.showerror("Ошибка", "Выбери валюту!")
-            return
-
-        result = amount / rates[cur1] * rates[cur2]
-
-        label_result.config(text=f"{amount} {cur1} = {round(result, 2)} {cur2}")
-
-    except ValueError:
-        messagebox.showerror("Ошибка", "Введите число!")
-
-
-def swap():
-    cur1 = combo_from.get()
-    cur2 = combo_to.get()
-    combo_from.set(cur2)
-    combo_to.set(cur1)
-root = tk.Tk()
-root.title("Конвертер валют 💱")
-root.geometry("320x300")
-root.resizable(False, False)
-ttk.Label(root, text="Конвертер валют", font=("Arial", 14)).pack(pady=10)
-ttk.Label(root, text="Из валюты:").pack()
-combo_from = ttk.Combobox(root, values=list(rates.keys()), state="readonly")
-combo_from.pack()
-combo_from.set("USD")
-ttk.Label(root, text="В валюту:").pack()
-combo_to = ttk.Combobox(root, values=list(rates.keys()), state="readonly")
-combo_to.pack()
-combo_to.set("KGS")
-ttk.Button(root, text="↔ Поменять валюты", command=swap).pack(pady=5)
-ttk.Label(root, text="Сумма:").pack()
-entry_amount = ttk.Entry(root)
-entry_amount.pack()
-ttk.Button(root, text="Конвертировать", command=convert).pack(pady=10)
-label_result = ttk.Label(root, text="Результат появится здесь", font=("Arial", 10))
-label_result.pack(pady=10)
-root.mainloop()
+    result = (amount / rates[from_cur]) * rates[to_cur]
+    print("Результат:", result)
+    print("-" * 20)
